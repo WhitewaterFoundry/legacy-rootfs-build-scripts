@@ -35,10 +35,10 @@ sudo chroot $DIST /bin/bash -c "echo 'Defaults lecture_file = /etc/sudoers.lectu
 sudo chroot $DIST /bin/bash -c "echo 'Enter your UNIX password below. This is not your Windows password.' > /etc/sudoers.lecture"
 
 # remove unnecessary packages in initial image
-sudo chroot $DIST apt-get -y -q remove systemd dmidecode --allow-remove-essential
+#sudo chroot $DIST apt-get -y -q remove systemd dmidecode --allow-remove-essential
 
 # clean up any orphaned apt dependencies
-sudo chroot $DIST apt-get -y -q autoremove
+#sudo chroot $DIST apt-get -y -q autoremove
 
 # clean apt cache
 sudo chroot $DIST apt-get -y -q clean

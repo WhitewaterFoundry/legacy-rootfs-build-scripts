@@ -6,6 +6,7 @@ BUILDIR=$(pwd)
 TMPDIR=$(mktemp -d)
 ARCH=""
 DIST="testing"
+mkdir -p $TMPDIR/$DIST
 cd $TMPDIR
 
 function build {
@@ -19,7 +20,10 @@ sudo cdebootstrap -a $ARCH --include=sudo,locales,git,ssh,gnupg,apt-transport-ht
 
 # download and install pengwin-base and pengwin-setup
 sudo curl "https://salsa.debian.org/rhaist-guest/WSL/raw/master/linux_files/profile" -so "${TMPDIR}/${DIST}/etc/profile"
-sudo cp $BUILDIR/pengwin_linux_files/setup $TMPDIR/$DIST/etc/setup
+sudo cp $BUILDIR/linux_files/setup $TMPDIR/$DIST/etc/setup
+
+# bind /dev/pts so chroot will work, then install
+sudo mount --bind /dev/pts $DIST/dev/pts
 sudo chroot $DIST /bin/bash -c "bash /etc/setup --silent --install"
 
 # configure initial language settings
@@ -31,10 +35,10 @@ sudo chroot $DIST /bin/bash -c "echo 'Defaults lecture_file = /etc/sudoers.lectu
 sudo chroot $DIST /bin/bash -c "echo 'Enter your UNIX password below. This is not your Windows password.' > /etc/sudoers.lecture"
 
 # remove unnecessary packages in initial image
-sudo chroot $DIST apt-get -y -q remove systemd dmidecode --allow-remove-essential
+#sudo chroot $DIST apt-get -y -q remove systemd dmidecode --allow-remove-essential
 
 # clean up any orphaned apt dependencies
-sudo chroot $DIST apt-get -y -q autoremove
+#sudo chroot $DIST apt-get -y -q autoremove
 
 # clean apt cache
 sudo chroot $DIST apt-get -y -q clean

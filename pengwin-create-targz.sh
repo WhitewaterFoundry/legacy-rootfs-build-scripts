@@ -6,6 +6,7 @@ BUILDIR=$(pwd)
 TMPDIR=$(mktemp -d)
 ARCH=""
 DIST="testing"
+mkdir -p $TMPDIR/$DIST
 cd $TMPDIR
 
 function build {

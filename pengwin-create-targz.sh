@@ -20,7 +20,10 @@ sudo cdebootstrap -a $ARCH --include=sudo,locales,git,ssh,gnupg,apt-transport-ht
 
 # download and install pengwin-base and pengwin-setup
 sudo curl "https://salsa.debian.org/rhaist-guest/WSL/raw/master/linux_files/profile" -so "${TMPDIR}/${DIST}/etc/profile"
-sudo cp $BUILDIR/pengwin_linux_files/setup $TMPDIR/$DIST/etc/setup
+sudo cp $BUILDIR/linux_files/setup $TMPDIR/$DIST/etc/setup
+
+# bind /dev/pts so chroot will work, then install
+sudo mount --bind /dev/pts $DIST/dev/pts
 sudo chroot $DIST /bin/bash -c "bash /etc/setup --silent --install"
 
 # configure initial language settings
